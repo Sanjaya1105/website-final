@@ -109,12 +109,42 @@
     const contactCard = document.querySelector('.contact-grid .card');
     contactCard.innerHTML = `<h3>Contact the research team</h3><div class="team-contacts">${data.members.map(member => `<a href="mailto:${escape(member.email)}"><strong>${escape(member.name)}</strong><span>${escape(member.role)}</span><small>${escape(member.email)} ↗</small></a>`).join('')}</div>`;
   }
-  if (page === 'contact.html') document.getElementById('contact-form').addEventListener('submit', event => {
+
+if (page === 'contact.html') {
+  document.getElementById('contact-form').addEventListener('submit', event => {
     event.preventDefault();
+
     const form = new FormData(event.target);
-    const body = `Name: ${form.get('name')}\nEmail: ${form.get('email')}\n\n${form.get('message')}`;
-    const status = document.getElementById('contact-status');
-    if (data.contactEmail) { location.href = `mailto:${encodeURIComponent(data.contactEmail)}?subject=${encodeURIComponent('Lumora — '+form.get('subject'))}&body=${encodeURIComponent(body)}`; status.textContent = 'Email draft requested. Complete sending in your email application.'; }
-    else { const draft = document.getElementById('enquiry-draft'); draft.hidden = false; draft.value = `Subject: Lumora — ${form.get('subject')}\n\n${body}`; status.textContent = 'Enquiry prepared below. The team email is pending, so nothing has been sent. You can copy this draft.'; draft.focus(); draft.select(); }
+
+    const name = form.get('name');
+    const email = form.get('email');
+    const subject = form.get('subject');
+    const message = form.get('message');
+
+    const body =
+      `Name: ${name}\n` +
+      `Email: ${email}\n\n` +
+      `${message}`;
+
+    const recipient = data.contactEmail;
+
+    if (!recipient) {
+      document.getElementById('contact-status').textContent =
+        'Please configure the project contact email in js/data.js.';
+      return;
+    }
+
+    const gmailUrl =
+      'https://mail.google.com/mail/?view=cm&fs=1' +
+      '&to=' + encodeURIComponent(recipient) +
+      '&su=' + encodeURIComponent('Lumora — ' + subject) +
+      '&body=' + encodeURIComponent(body);
+
+    window.open(gmailUrl, '_blank', 'noopener');
+
+    document.getElementById('contact-status').textContent =
+      'Gmail opened with your enquiry prepared. Please review and send it.';
   });
+}
+
 })();
