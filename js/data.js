@@ -1,6 +1,6 @@
 // Update verified project details here. File URLs are relative to the website folder.
 window.LUMORA = {
-  contactEmail: '',
+  contactEmail: 'it22166074@my.sliit.lk',
   supervisor: 'Dr Kalpani Manathunga',
   coSupervisor: 'Mr Jeewaka Perera',
   members: [
